@@ -16,7 +16,6 @@ function Dashboard() {
 
   return (
     <>
-      <div>Dashboard</div>
       <button onClick={handleLogout}>Logout</button>
     </>
   );

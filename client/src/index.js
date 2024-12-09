@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import {Provider} from 'react-redux';
+import './index.css';
+import { Provider } from 'react-redux';
 import { store } from './store';
-
+import { registerServiceWorker } from './serviceWorker'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,4 +13,5 @@ root.render(
   </Provider>
 );
 
-
+// Register the service worker after rendering
+// registerServiceWorker();

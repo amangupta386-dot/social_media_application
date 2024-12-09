@@ -6,6 +6,7 @@
     "@reduxjs/toolkit": "^2.4.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "firebase": "^11.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.1.2",
@@ -35,5 +36,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "init": "^0.1.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "webpack-pwa-manifest": "^4.3.0"
   }
 }

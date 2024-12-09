@@ -5,9 +5,9 @@ import routes from './appRouter/routes';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect } from 'react';
+import React, { createElement, useEffect } from 'react';
 import PageNotFound from './pages/PageNotFound';
-import { loadUser } from './features/auth/authActions';
+import { loadUser }  from './features/auth/authActions';
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -20,7 +20,7 @@ function App() {
 
   const getElement = (elementName) => {
     const components = { Login, Register, Dashboard, PageNotFound };
-    return React.createElement(components[elementName]);
+    return createElement(components[elementName] || PageNotFound);
   };
 
   const publicRoutes = routes.public.map((route) => (
