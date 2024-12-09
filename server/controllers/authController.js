@@ -3,8 +3,8 @@ const { verifyToken } = require('../services/jwtService');
 
 exports.register = async (req, res) => {
     try {
-        const token = await registerUser(req.body);
-        res.status(201).json({ message: 'User registered successfully', token });
+        await registerUser(req.body);
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

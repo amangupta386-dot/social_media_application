@@ -1,10 +1,10 @@
 const User = require('../models/user');
 const { generateToken } = require('./jwtService');
 
-const registerUser = async (userData) => {
+const registerUser = async (userData, res) => {
     const user = new User(userData);
     await user.save();
-    return generateToken(user);
+    return;
 };
 
 const loginUser = async (email, password) => {
