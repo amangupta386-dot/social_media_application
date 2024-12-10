@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const { registerUser, loginUser } = require('../services/authService');
-const { verifyToken } = require('../services/jwtService');
+const { verifyToken, generateToken } = require('../services/jwtService');
 
 exports.register = async (req, res) => {
     try {
@@ -41,12 +41,11 @@ exports.googleSignIn = async (req, res) => {
                 await user.save();
             }
         } else {
-           
             user = new User({ email, googleId, name });
             await user.save();
         }
-
-        res.status(200).json({ message: "Google login successful", user });
+        const userToken = generateToken(user);
+        res.status(200).json({ message: "Google login successful", token: userToken });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

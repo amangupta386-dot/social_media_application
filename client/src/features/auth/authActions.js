@@ -45,7 +45,7 @@ export const registerUser = createAsyncThunk(
   
   export const googleSignIn = createAsyncThunk(
     'auth/googleSignIn',
-    async (_, { rejectWithValue, dispatch }) => {
+    async (_, { rejectWithValue}) => {
       try {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
@@ -57,8 +57,7 @@ export const registerUser = createAsyncThunk(
             googleId: result.user.uid, 
             token: result.user.accessToken,
           };
-          localStorage.setItem('token', result.user.accessToken);
-  
+          
           const response = await axios.post('http://localhost:3000/api/auth/google-login', {
             email: user.email,
             googleId: user.googleId,

@@ -79,6 +79,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload;
         state.token = action.payload.token;
+        localStorage.setItem('token', action.payload.token);
       })
       .addCase(googleSignIn.rejected, (state, action) => {
         state.loading = false;
