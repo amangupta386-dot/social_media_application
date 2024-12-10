@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../features/auth/authActions';
 import { useNavigate } from 'react-router-dom';
+import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -19,40 +20,10 @@ const Register = () => {
     }
   };
 
-  const images = [
-    "/images/image1.png",
-    "/images/image2.png",
-    "/images/image4.png",
-    "/images/image5.png",
-    "/images/image8.png",
-    "/images/image3.png",
-    "/images/image6.png",
-    "/images/image7.png",
-    "/images/image8.png",
-    "/images/image9.png"
-  ];
 
   return (
     <div className="relative h-screen bg-white overflow-hidden w-full">
-    {/* Image Grid */}
-    <div className="grid grid-cols-3 gap-2 p-2">
-      {images.map((image, index) => (
-        <div
-          key={index}
-          className={`relative overflow-hidden 
-              ${index % 2 === 0 ? "row-span-3" : ""}
-              ${index === 4 ? "h-72" : "h-full"}`}
-        >
-          <img
-            src={image}
-            alt={`Image ${index + 1}`}
-            className="w-full h-full object-cover rounded-lg"
-          />
-        </div>
-      ))}
-    </div>
-
-    {/* Register Form */}
+      <AuthenticationPageGrid/>
     <div
       className="absolute bottom-0 w-full bg-black rounded-t-[100px] p-8"
       style={{

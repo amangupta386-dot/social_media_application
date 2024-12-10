@@ -3,26 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../features/auth/authActions';
 import SignInWithGoogle from '../components/SignInWithGoogle';
+import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
-
-  const images = [
-    "/images/image1.png",
-    "/images/image2.png",
-    "/images/image4.png",
-    "/images/image5.png",
-    "/images/image8.png",
-    "/images/image3.png",
-    "/images/image6.png",
-    "/images/image7.png",
-    "/images/image8.png",
-    "/images/image9.png"
-  ];
+  const navigate = useNavigate(); const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,26 +27,7 @@ const Login = () => {
   return (
 
     <div className="relative h-screen bg-white overflow-hidden w-full">
-
-      <div className="grid grid-cols-3 gap-2 p-2">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`relative overflow-hidden 
-                ${index % 2 === 0 ? "row-span-3" : ""
-              } ${index === 4 ? "h-72" : "h-full"
-              }`}
-          >
-            <img
-              src={image}
-              alt={`Image ${index + 1}`}
-              className="w-full h-full object-cover rounded-lg"
-            />
-          </div>
-        ))}
-      </div>
-
-
+      <AuthenticationPageGrid />
       <div
         className="absolute bottom-0 w-full h-48  bg-black rounded-[100px] "
         style={{
@@ -67,7 +35,7 @@ const Login = () => {
           transform: "translateY(50%)",
         }}
       >
-         <SignInWithGoogle />
+        <SignInWithGoogle />
         <div className="flex flex-col items-center mt-5 text-white">
           <div className="w-full max-w-sm">
             <input
