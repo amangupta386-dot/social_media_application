@@ -1,17 +1,29 @@
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React from 'react';
+import {toast} from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { googleSignIn } from '../features/auth/authActions';
 
 function SignInWithGoogle() {
 
-    const googleSignIn=()=>{
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider).then(async(result)=>{
-            console.log(result);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleGoogleSignIn = () => {
+      dispatch(googleSignIn())
+        .unwrap()
+        .then(() => {
+          toast.success('Logged in successfully');
+          navigate('/dashboard');
         })
-    }
+        .catch((err) => {
+          toast.error(err || 'Google Sign-In failed');
+        });
+    };
+  
 
   return (
-    <button onClick={googleSignIn} className="flex items-center m-auto mt-10 space-x-4 px-6 py-2 bg-white text-gray-600 rounded-lg border border-gray-300 shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+    <button onClick={handleGoogleSignIn} className="flex items-center m-auto mt-10 space-x-4 px-6 py-2 bg-white text-gray-600 rounded-lg border border-gray-300 shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 18 18" 

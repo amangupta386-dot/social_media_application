@@ -1,3 +1,4 @@
+const User = require('../models/user');
 const { registerUser, loginUser } = require('../services/authService');
 const { verifyToken } = require('../services/jwtService');
 
@@ -30,5 +31,24 @@ exports.protected = (req, res) => {
     }
 };
 
+exports.googleSignIn = async (req, res) => {
+    const { email, googleId, name } = req.body; 
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            if (!user.googleId) {
+                user.googleId = googleId;
+                await user.save();
+            }
+        } else {
+           
+            user = new User({ email, googleId, name });
+            await user.save();
+        }
 
+        res.status(200).json({ message: "Google login successful", user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 

@@ -8,9 +8,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Dispatch the logout action to clear the state
     dispatch(logout());
-    // Navigate to the login page
     navigate('/login');
   };
 

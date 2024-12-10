@@ -13,10 +13,18 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return !this.googleId; // Password is required only if googleId is not set
+        },
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true 
     }
 });
 
+// Hash the password if it is modified
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 10);

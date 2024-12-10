@@ -48,7 +48,7 @@ const Login = () => {
             className={`relative overflow-hidden 
                 ${index % 2 === 0 ? "row-span-3" : ""
               } ${index === 4 ? "h-72" : "h-full"
-              }`} // Apply a reduced height for images 5 and 6
+              }`}
           >
             <img
               src={image}
