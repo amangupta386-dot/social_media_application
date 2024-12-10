@@ -56,12 +56,14 @@ export const registerUser = createAsyncThunk(
             email: result.user.email,
             googleId: result.user.uid, 
             token: result.user.accessToken,
+            photoURL:result.user.photoURL
           };
           
           const response = await axios.post('http://localhost:3000/api/auth/google-login', {
             email: user.email,
             googleId: user.googleId,
             name: user.name,
+            profilePic:user.photoURL
           });
   
           if (response.data) {

@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
         sparse: true 
+    }, 
+    profilePic:{
+        type:String,
+        unique:true
     }
 });
 

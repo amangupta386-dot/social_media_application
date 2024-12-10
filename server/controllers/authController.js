@@ -32,7 +32,7 @@ exports.protected = (req, res) => {
 };
 
 exports.googleSignIn = async (req, res) => {
-    const { email, googleId, name } = req.body; 
+    const { email, googleId, name, profilePic } = req.body; 
     try {
         let user = await User.findOne({ email });
         if (user) {
@@ -41,7 +41,7 @@ exports.googleSignIn = async (req, res) => {
                 await user.save();
             }
         } else {
-            user = new User({ email, googleId, name });
+            user = new User({ email, googleId, name, profilePic });
             await user.save();
         }
         const userToken = generateToken(user);
