@@ -12,7 +12,6 @@ import { RouteName } from './utils/routesConstants';
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log(process.env.REACT_APP_BASE_URL, "baseurl");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,7 +45,7 @@ function App() {
         {publicRoutes}
         {privateRoutes}
         
-        <Route path={RouteName.initialRoute} element={<Navigate to={isAuthenticated ? RouteName.dashboard : RouteName.login} />} />
+        <Route path={RouteName.initialRoute} element={<Navigate to={ RouteName.login} />} />
        
       </Routes>
     </Router>

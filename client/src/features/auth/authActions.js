@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../components/fireabase';
-import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../utils/apiEndPoints";
 
 

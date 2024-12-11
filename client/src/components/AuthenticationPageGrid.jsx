@@ -25,7 +25,7 @@ function AuthenticationPageGrid() {
         >
           <img
             src={image}
-            alt={`Image ${index + 1}`}
+            alt={`${index + 1} pic`}
             className="w-full h-full object-cover rounded-lg"
           />
         </div>

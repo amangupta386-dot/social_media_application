@@ -5,6 +5,10 @@ import { loginUser } from '../features/auth/authActions';
 import SignInWithGoogle from '../components/SignInWithGoogle';
 import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 import { RouteName } from '../utils/routesConstants';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { clearError, setError } from '../features/auth/authSlice';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,9 +23,26 @@ const Login = () => {
   }, [isAuthenticated, navigate]);
 
   const handleLogin = async () => {
+
+    if(!email || !password){
+      dispatch(setError('Please fill in all fields.'));
+      setTimeout(()=>{
+        dispatch(clearError());
+      }, 2000)
+      return;
+    }
+
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate(RouteName.dashboard);
+      toast.success('Login Successful!', {
+        position: 'top-center',
+        autoClose: 3000,
+      });
+    } else if (loginUser.rejected.match(resultAction)) {
+      toast.error('Login Failed', {
+        position: 'top-center',
+        autoClose: 3000,
+      });
     }
   };
 
@@ -36,6 +57,7 @@ const Login = () => {
           transform: "translateY(50%)",
         }}
       >
+        
         <SignInWithGoogle />
         <div className="flex flex-col items-center mt-5 text-white">
           <div className="w-full max-w-sm">
@@ -73,6 +95,18 @@ const Login = () => {
               </span>
             </p>
           </div>
+          <ToastContainer
+            position="top-left"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </div>
       </div>
     </div>

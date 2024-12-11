@@ -4,6 +4,10 @@ import { registerUser } from '../features/auth/authActions';
 import { useNavigate } from 'react-router-dom';
 import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 import { RouteName } from '../utils/routesConstants';
+import { clearError, setError } from '../features/auth/authSlice';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -14,10 +18,26 @@ const Register = () => {
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleRegister = async () => {
+    if(!email || !password || !name){
+      dispatch(setError('Please fill in all fields.'));
+      setTimeout(()=>{
+        dispatch(clearError());
+      }, 2000)
+      return;
+    }
+    
     const resultAction = await dispatch(registerUser({ name, email, password }));
-    debugger
     if (registerUser.fulfilled.match(resultAction)) {
-      navigate(RouteName.login);
+      toast.success('User Register Successfully', {
+        position: 'top-center',
+        autoClose: 3000,
+      });
+      navigate(RouteName.login);    
+    } else if (registerUser.rejected.match(resultAction)) {
+      toast.error('Register Failed.', {
+        position: 'top-center',
+        autoClose: 3000,
+      });
     }
   };
 
@@ -76,6 +96,18 @@ const Register = () => {
             </span>
           </p>
         </div>
+        <ToastContainer
+            position="top-left"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
       </div>
     </div>
   </div>
