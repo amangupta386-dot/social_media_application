@@ -14,7 +14,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const navigate = useNavigate(); const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate(); 
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
