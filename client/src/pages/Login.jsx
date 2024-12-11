@@ -8,6 +8,7 @@ import { RouteName } from '../utils/routesConstants';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { clearError, setError } from '../features/auth/authSlice';
+import { validateEmail } from '../utils/validations';
 
 
 const Login = () => {
@@ -26,6 +27,13 @@ const Login = () => {
 
     if(!email || !password){
       dispatch(setError('Please fill in all fields.'));
+      setTimeout(()=>{
+        dispatch(clearError());
+      }, 2000)
+      return;
+    }
+    if(!validateEmail(email)){
+      dispatch(setError('Please enter valid email'));
       setTimeout(()=>{
         dispatch(clearError());
       }, 2000)

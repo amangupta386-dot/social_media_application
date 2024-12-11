@@ -9,7 +9,11 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        match: [
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            'Please enter a valid email address',
+        ],
     },
     password: {
         type: String,
@@ -22,12 +26,14 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         sparse: true 
     }, 
-    profilePic:{
-        type:String,
-        unique:true,
-        sparse: true 
+    profilePic: {
+        type: String,
+        default: null
     }
 });
+
+// Create a sparse index for profilePic
+UserSchema.index({ profilePic: 1 }, { sparse: true });
 
 // Hash the password if it is modified
 UserSchema.pre('save', async function (next) {

@@ -33,12 +33,12 @@ const authSlice = createSlice({
         (state, action) => {
           state.loading = false;
           state.isAuthenticated = false;
-          state.user = action.payload;
+          state.user = action?.payload;
         })
       .addCase(registerUser.rejected,
         (state, action) => {
           state.loading = false;
-          state.error = action.payload;
+          state.error = action?.payload;
         });
 
     builder

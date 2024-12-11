@@ -10,9 +10,10 @@ export const registerUser = createAsyncThunk(
     async ({ name, email, password }, { rejectWithValue }) => {
       try {
         const response = await axios.post(API_ENDPOINTS.REGISTER, { name, email, password });
-        return response.data;
+        return response?.data;
       } catch (error) {
-        return rejectWithValue(error.response?.data || 'Something went wrong');
+        debugger
+        return rejectWithValue(error?.response?.data || 'Something went wrong');
       }
     }
   );

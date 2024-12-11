@@ -7,6 +7,7 @@ import { RouteName } from '../utils/routesConstants';
 import { clearError, setError } from '../features/auth/authSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { validateEmail } from '../utils/validations';
 
 
 const Register = () => {
@@ -15,7 +16,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state?.auth);
 
   const handleRegister = async () => {
     if(!email || !password || !name){
@@ -25,7 +26,15 @@ const Register = () => {
       }, 2000)
       return;
     }
-    
+
+    if(!validateEmail(email)){
+      dispatch(setError('Please enter valid email'));
+      setTimeout(()=>{
+        dispatch(clearError());
+      }, 2000)
+      return;
+    }
+
     const resultAction = await dispatch(registerUser({ name, email, password }));
     if (registerUser.fulfilled.match(resultAction)) {
       toast.success('User Register Successfully', {
@@ -58,14 +67,14 @@ const Register = () => {
             type="text"
             placeholder="Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e?.target?.value)}
             className="w-full p-2 mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           />
           <input
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e?.target?.value)}
             className="w-full p-2 mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           />
 
@@ -73,7 +82,7 @@ const Register = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e?.target?.value)}
             className="w-full p-2 mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           />
           <button
