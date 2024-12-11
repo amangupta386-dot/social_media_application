@@ -6,10 +6,9 @@ import SignInWithGoogle from '../components/SignInWithGoogle';
 import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 import { RouteName } from '../utils/routesConstants';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { clearError, setError } from '../features/auth/authSlice';
 import { validateEmail } from '../utils/validations';
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +20,8 @@ const Login = () => {
     if (isAuthenticated) {
       navigate(RouteName.dashboard);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
+
 
   const handleLogin = async () => {
 
@@ -42,11 +42,13 @@ const Login = () => {
 
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
+      debugger
       toast.success('Login Successful!', {
         position: 'top-center',
         autoClose: 3000,
       });
     } else if (loginUser.rejected.match(resultAction)) {
+      debugger
       toast.error('Login Failed', {
         position: 'top-center',
         autoClose: 3000,
@@ -73,14 +75,14 @@ const Login = () => {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e?.target?.value)}
               className="w-full p-2 mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e?.target?.value)}
               className="w-full p-2 mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
             <button

@@ -2,17 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 import { googleSignIn, loadUser, loginUser, registerUser } from './authActions';
 
 
-const initialState = { isAuthenticated: false, user: null, loading: false, error: null, token: null, };
+const initialState = { isAuthenticated: false, user: null, loading: false, error: "", token: null, };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     setError: (state, action) => {
-      state.error = action.payload; // Update the error state
+      state.error = typeof action.payload === 'string' ? action.payload : 'An error occurred';    
     },
     clearError: (state) => {
-      state.error = null; // Clear the error
+      state.error = null; 
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -23,6 +23,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    debugger
     builder
       .addCase(registerUser.pending,
         (state) => {
@@ -47,11 +48,12 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        debugger
         state.loading = false;
         state.isAuthenticated = true;
-        state.token = action.payload.token;
-        state.user = action.payload.user || null;
-        localStorage.setItem('token', action.payload.token);
+        state.token = action?.payload?.token;
+        state.user = action?.payload?.user || null;
+        localStorage.setItem('token', action?.payload?.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

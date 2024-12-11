@@ -13,7 +13,7 @@ export const registerUser = createAsyncThunk(
         return response?.data;
       } catch (error) {
         debugger
-        return rejectWithValue(error?.response?.data || 'Something went wrong');
+        return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
       }
     }
   );
@@ -22,10 +22,13 @@ export const registerUser = createAsyncThunk(
     'auth/loginUser',
     async ({ email, password }, { rejectWithValue }) => {
       try {
+        debugger
         const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
+        debugger
         return response.data; 
       } catch (error) {
-        return rejectWithValue(error.response?.data || 'Something went wrong');
+        debugger
+        return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
       }
     }
   );
@@ -40,7 +43,7 @@ export const registerUser = createAsyncThunk(
       });
       return response.data; 
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to load user');
+      return rejectWithValue(error.response?.data.error || 'Failed to load user');
     }
   });
   

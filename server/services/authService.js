@@ -1,11 +1,9 @@
 const User = require('../models/user');
 const { generateToken } = require('./jwtService');
 
-const registerUser = async (userData, res) => {
-    console.log(userData,'userData');
-    
-    const user = await User.create(userData);
-    return user;
+const registerUser = async (userData, res) => {    
+    await User.create(userData);
+    return;
 };
 
 const loginUser = async (email, password) => {

@@ -4,14 +4,13 @@ import ProtectedRoute from './appRouter/protectedRoutes';
 import routes from './appRouter/routes';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import React, { createElement, useEffect } from 'react';
 import PageNotFound from './pages/PageNotFound';
 import { loadUser }  from './features/auth/authActions';
 import { RouteName } from './utils/routesConstants';
 
 function App() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
 
   useEffect(() => {
