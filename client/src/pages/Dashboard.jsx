@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
+import { RouteName } from '../utils/routesConstants';
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate(RouteName.login);
   };
 
   return (

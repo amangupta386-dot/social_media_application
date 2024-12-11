@@ -3,13 +3,14 @@ import axios from "axios";
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../components/fireabase';
 import { toast } from "react-toastify";
+import { API_ENDPOINTS } from "../../utils/apiEndPoints";
 
 
 export const registerUser = createAsyncThunk(
     'auth/registerUser',
     async ({ name, email, password }, { rejectWithValue }) => {
       try {
-        const response = await axios.post('http://localhost:3000/api/auth/register', { name, email, password });
+        const response = await axios.post(API_ENDPOINTS.REGISTER, { name, email, password });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data || 'Something went wrong');
@@ -21,7 +22,7 @@ export const registerUser = createAsyncThunk(
     'auth/loginUser',
     async ({ email, password }, { rejectWithValue }) => {
       try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+        const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
         return response.data; 
       } catch (error) {
         return rejectWithValue(error.response?.data || 'Something went wrong');
@@ -34,7 +35,7 @@ export const registerUser = createAsyncThunk(
     if (!token) return rejectWithValue('No token found');
     
     try {
-      const response = await axios.get('http://localhost:3000/api/auth/protected', {
+      const response = await axios.get(API_ENDPOINTS.PROTECTED, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data; 
@@ -58,8 +59,8 @@ export const registerUser = createAsyncThunk(
             token: result.user.accessToken,
             photoURL:result.user.photoURL
           };
-          
-          const response = await axios.post('http://localhost:3000/api/auth/google-login', {
+          console.log(API_ENDPOINTS.GOOGLE_SIGN_IN, "GOOGLE_SIGN_IN");
+          const response = await axios.post(API_ENDPOINTS.GOOGLE_SIGN_IN, {
             email: user.email,
             googleId: user.googleId,
             name: user.name,

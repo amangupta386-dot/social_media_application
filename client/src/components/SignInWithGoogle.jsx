@@ -3,6 +3,7 @@ import {toast} from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { googleSignIn } from '../features/auth/authActions';
+import { RouteName } from '../utils/routesConstants';
 
 function SignInWithGoogle() {
 
@@ -14,7 +15,7 @@ function SignInWithGoogle() {
         .unwrap()
         .then(() => {
           toast.success('Logged in successfully');
-          navigate('/dashboard');
+          navigate(RouteName.dashboard);
         })
         .catch((err) => {
           toast.error(err || 'Google Sign-In failed');

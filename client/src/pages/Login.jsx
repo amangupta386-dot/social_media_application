@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../features/auth/authActions';
 import SignInWithGoogle from '../components/SignInWithGoogle';
 import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
+import { RouteName } from '../utils/routesConstants';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,14 +14,14 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate(RouteName.dashboard);
     }
   }, [isAuthenticated, navigate]);
 
   const handleLogin = async () => {
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate('/dashboard');
+      navigate(RouteName.dashboard);
     }
   };
 
@@ -65,7 +66,7 @@ const Login = () => {
             <p className="text-sm">
               Don't have an account?{' '}
               <span
-                onClick={() => navigate('/register')}
+                onClick={() => navigate(RouteName.register)}
                 className="text-blue-400 hover:underline cursor-pointer"
               >
                 Register here

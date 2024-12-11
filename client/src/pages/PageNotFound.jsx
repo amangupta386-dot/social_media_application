@@ -1,10 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { RouteName } from '../utils/routesConstants';
 
 function PageNotFound() {
     const navigate = useNavigate()
     const navigateLoginPage =()=> {
-        navigate('/');
+        navigate(RouteName.initialRoute);
     }
   return (
     <>

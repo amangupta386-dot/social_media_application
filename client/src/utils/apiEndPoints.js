@@ -1,0 +1,11 @@
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CONFIG_ENDPOINT = `${BASE_URL}/api/auth`;
+
+const API_ENDPOINTS = {
+  REGISTER: `${CONFIG_ENDPOINT}/register`,
+  LOGIN: `${CONFIG_ENDPOINT}/login`,
+  GOOGLE_SIGN_IN: `${CONFIG_ENDPOINT}/google-login`,
+  PROTECTED:`${CONFIG_ENDPOINT}/protected`
+};
+
+export { BASE_URL, CONFIG_ENDPOINT, API_ENDPOINTS };

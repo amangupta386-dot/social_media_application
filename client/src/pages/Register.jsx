@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../features/auth/authActions';
 import { useNavigate } from 'react-router-dom';
 import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
+import { RouteName } from '../utils/routesConstants';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ const Register = () => {
     const resultAction = await dispatch(registerUser({ name, email, password }));
     debugger
     if (registerUser.fulfilled.match(resultAction)) {
-      navigate('/login');
+      navigate(RouteName.login);
     }
   };
 
@@ -68,7 +69,7 @@ const Register = () => {
           <p className="text-sm">
             Already have an account?{' '}
             <span
-              onClick={() => navigate('/login')}
+              onClick={() => navigate(RouteName.login)}
               className="text-blue-400 hover:underline cursor-pointer"
             >
               Login here
