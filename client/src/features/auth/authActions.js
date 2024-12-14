@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk(
         const response = await axios.post(API_ENDPOINTS.REGISTER, { name, email, password });
         return response?.data;
       } catch (error) {
-        debugger
+      
         return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
       }
     }
@@ -21,13 +21,11 @@ export const registerUser = createAsyncThunk(
   export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async ({ email, password }, { rejectWithValue }) => {
-      try {
-        debugger
+      try { 
         const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
-        debugger
         return response.data; 
       } catch (error) {
-        debugger
+        
         return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
       }
     }

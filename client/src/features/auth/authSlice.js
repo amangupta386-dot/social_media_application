@@ -23,7 +23,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    debugger
+    
     builder
       .addCase(registerUser.pending,
         (state) => {
@@ -48,7 +48,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        debugger
+        
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action?.payload?.token;

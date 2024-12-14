@@ -33,6 +33,7 @@ const Login = () => {
       }, 2000)
       return;
     }
+
     if(!validateEmail(email)){
       dispatch(setError('Please enter valid email'));
       setTimeout(()=>{
@@ -43,13 +44,11 @@ const Login = () => {
 
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      debugger
       toast.success('Login Successful!', {
         position: 'top-center',
         autoClose: 3000,
       });
     } else if (loginUser.rejected.match(resultAction)) {
-      debugger
       toast.error('Login Failed', {
         position: 'top-center',
         autoClose: 3000,
