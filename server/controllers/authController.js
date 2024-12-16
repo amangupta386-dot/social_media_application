@@ -4,12 +4,17 @@ const { verifyToken, generateToken } = require('../services/jwtService');
 
 exports.register = async (req, res) => {
     try {
-        await registerUser(req.body);
+        await registerUser(req.body); // Your user registration logic
+
+        // Access the collection and create an index
+        // await User.collection.createIndex({ fieldName: -1 }); // Ascending index on email
+
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
+
 
 exports.login = async (req, res) => {
     try {

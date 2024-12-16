@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default: null
+    },
+    fieldName:{
+        type:String,
+        default: Math.round(Math.random() * 1000),
     }
 });
 
