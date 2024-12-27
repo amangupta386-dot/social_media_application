@@ -6,15 +6,14 @@ exports.register = async (req, res) => {
     try {
         await registerUser(req.body); // Your user registration logic
 
-        // Access the collection and create an index
-        // await User.collection.createIndex({ fieldName: -1 }); // Ascending index on email
+        // Sequelize equivalent: Ensure index creation if needed
+        // This is generally handled automatically by Sequelize's `sync` method.
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
-
 
 exports.login = async (req, res) => {
     try {
@@ -37,22 +36,20 @@ exports.protected = (req, res) => {
 };
 
 exports.googleSignIn = async (req, res) => {
-    const { email, googleId, name, profilePic } = req.body; 
+    const { email, googleId, name, profilePic } = req.body;
     try {
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ where: { email } });
         if (user) {
             if (!user.googleId) {
                 user.googleId = googleId;
                 await user.save();
             }
         } else {
-            user = new User({ email, googleId, name, profilePic });
-            await user.save();
+            user = await User.create({ email, googleId, name, profilePic });
         }
-        const userToken = generateToken(user);
+        const userToken = generateToken(user.toJSON()); // Convert to plain object
         res.status(200).json({ message: "Google login successful", token: userToken });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
-
+};

@@ -1,55 +1,52 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        match: [
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            'Please enter a valid email address',
-        ],
-    },
-    password: {
-        type: String,
-        required: function() {
-            return !this.googleId; // Password is required only if googleId is not set
+const User = sequelize.define(
+    'User',
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+            },
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        googleId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        profilePic: {
+            type: DataTypes.STRING,
+            defaultValue: null,
+        },
+        fieldName: {
+            type: DataTypes.STRING,
+            defaultValue: () => Math.round(Math.random() * 1000).toString(),
         },
     },
-    googleId: {
-        type: String,
-        unique: true,
-        sparse: true 
-    }, 
-    profilePic: {
-        type: String,
-        default: null
-    },
-    fieldName:{
-        type:String,
-        default: Math.round(Math.random() * 1000),
+    {
+        tableName: 'Users', // Explicitly define the table name
     }
-});
+);
 
-// Create a sparse index for profilePic
-UserSchema.index({ profilePic: 1 }, { sparse: true });
-
-// Hash the password if it is modified
-UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-});
-
-UserSchema.methods.isPasswordValid = async function (password) {
+User.prototype.isPasswordValid = async function (password) {
     return bcrypt.compare(password, this.password);
 };
 
-const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
