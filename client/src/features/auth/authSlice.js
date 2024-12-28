@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { googleSignIn, loadUser, loginUser, registerUser } from './authActions';
 
 
-const initialState = { isAuthenticated: false, user: null, loading: false, error: "", token: null, };
+const initialState = { isAuthenticated: false, user: null, loading: false, error: "", token: null, userData:null};
 
 const authSlice = createSlice({
   name: 'auth',
