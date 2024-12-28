@@ -59,7 +59,7 @@ const Login = () => {
   return (
 
     <div className="relative h-screen bg-white overflow-hidden w-full">
-      <AuthenticationPageGrid />
+      
       <div
         className="absolute bottom-0 w-full h-48  bg-black rounded-[100px] "
         style={{
@@ -68,7 +68,7 @@ const Login = () => {
         }}
       >
         
-        <SignInWithGoogle />
+      
         <div className="flex flex-col items-center mt-5 text-white">
           <div className="w-full max-w-sm">
             <input
