@@ -1,210 +1,175 @@
 # Authentication API Documentation
 
-This document provides details about the Authentication API implemented using Node.js, Express, Sequelize, Passport.js, and JWT.
+This API provides authentication functionalities, including user registration, login, and access to protected resources. Below is the detailed documentation for the available endpoints and related services.
 
----
+## Prerequisites
+- Node.js and npm installed.
+- A configured Sequelize setup connected to your database.
+- Environment variables for `JWT_SECRET`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, and `DB_HOST`.
 
-## **Setup**
-1. Clone the repository and install dependencies:
-   ```bash
-   npm install
-   ```
-2. Set up a `.env` file with the following variables:
-   ```env
-   JWT_SECRET=your_secret_key
-   DATABASE_URL=your_database_url
-   DB_NAME=your_db_name
-   DB_USER=your_db_user
-   DB_PASSWORD=your_db_password
-   DB_HOST=your_db_host
-   ```
-3. Run the application:
-   ```bash
-   npm start
-   ```
+## Models
 
----
+### User
+| Field    | Type    | Description                   |
+|----------|---------|-------------------------------|
+| id       | Integer | Primary key (auto-increment)  |
+| name     | String  | Full name of the user         |
+| email    | String  | Unique email address          |
+| password | String  | Hashed password               |
 
-## **Database Setup**
+### Token Generation
+- **Payload:** `{ id: user.id, email: user.email }`
+- **Secret:** Environment variable `JWT_SECRET`
+- **Expiration:** `1 hour`
 
-### **Configuration**
-The database is configured using Sequelize and PostgreSQL.
+## API Endpoints
 
-```javascript
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-});
+### 1. User Registration
+**Endpoint:** `POST /register`
 
-const syncDatabase = async () => {
-    try {
-        await sequelize.sync({ alter: true }); // Adjusts tables to match the models
-        console.log('Database synced successfully.');
-    } catch (error) {
-        console.error('Error syncing database:', error);
-    }
-};
+**Description:** Registers a new user.
 
-syncDatabase();
-
-module.exports = sequelize;
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "password": "password123"
+}
 ```
 
-### **Notes**
-- The `syncDatabase` function ensures that the database schema is in sync with the Sequelize models.
-- Use `alter: true` cautiously in production as it modifies existing tables.
-- Ensure database credentials are stored securely in the `.env` file.
-
----
-
-## **API Endpoints**
-
-### **Base URL**
-`/api/auth`
-
-### **Endpoints**
-
-#### **1. Register User**
-- **URL**: `/register`
-- **Method**: `POST`
-- **Description**: Registers a new user.
-- **Request Body**:
+**Response:**
+- **201 Created:** User registered successfully.
   ```json
   {
-    "name": "string",
-    "email": "string",
-    "password": "string"
+    "message": "User registered successfully"
   }
   ```
-- **Response**:
-  - **Success**:
-    ```json
-    {
-      "message": "User registered successfully"
-    }
-    ```
-  - **Error**:
-    ```json
-    {
-      "error": "User already exists"
-    }
-    ```
-
-#### **2. Login User**
-- **URL**: `/login`
-- **Method**: `POST`
-- **Description**: Authenticates a user and returns a JWT token.
-- **Request Body**:
+- **400 Bad Request:**
   ```json
   {
-    "email": "string",
-    "password": "string"
+    "error": "User already exists"
   }
   ```
-- **Response**:
-  - **Success**:
-    ```json
-    {
-      "message": "Login successful",
-      "token": "jwt_token"
-    }
-    ```
-  - **Error**:
-    ```json
-    {
-      "error": "Invalid password"
-    }
-    ```
 
-#### **3. Protected Route**
-- **URL**: `/protected`
-- **Method**: `GET`
-- **Description**: Accesses a protected route.
-- **Headers**:
+### 2. User Login
+**Endpoint:** `POST /login`
+
+**Description:** Authenticates a user and returns a JWT token.
+
+**Request Body:**
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+- **200 OK:** Login successful.
   ```json
   {
-    "Authorization": "Bearer jwt_token"
+    "message": "Login successful",
+    "token": "<JWT_TOKEN>"
   }
   ```
-- **Response**:
-  - **Success**:
-    ```json
-    {
-      "message": "Protected route accessed",
-      "user": { "id": "number", "email": "string", ... },
-      "token": "jwt_token"
-    }
-    ```
-  - **Error**:
-    ```json
-    {
-      "error": "Unauthorized"
-    }
-    ```
+- **400 Bad Request:** Invalid credentials.
+  ```json
+  {
+    "error": "User not found" or "Invalid password"
+  }
+  ```
 
----
+### 3. Protected Route
+**Endpoint:** `GET /protected`
 
-## **Middleware**
+**Description:** Access a protected resource. Requires a valid JWT token.
 
-### **authMiddleware**
-- Validates the JWT token provided in the `Authorization` header.
-- Decodes the token and attaches the authenticated user and token to the request object.
-- Returns a `401 Unauthorized` response if the token is invalid or missing.
+**Headers:**
+- `Authorization: Bearer <JWT_TOKEN>`
 
----
+**Response:**
+- **200 OK:** Access granted.
+  ```json
+  {
+    "message": "Protected route accessed",
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    "token": "<JWT_TOKEN>"
+  }
+  ```
+- **401 Unauthorized:**
+  ```json
+  {
+    "error": "Unauthorized access"
+  }
+  ```
 
-## **Models**
+## Middleware
 
-### **User**
-Defines the user schema with Sequelize.
-- **Fields**:
-  - `id`: Primary key (auto-incremented integer)
-  - `name`: String, required
-  - `email`: String, required, unique
-  - `password`: String, required (hashed)
-  - `googleId`: String, optional
-  - `profilePic`: String, optional
-  - `fieldName`: String, default random value
-- **Methods**:
-  - `isPasswordValid(password)`: Compares the provided password with the stored hashed password.
+### Authentication Middleware
+The `authMiddleware` validates the JWT token and authorizes the user.
 
----
+**Process:**
+1. Check for `Authorization` header.
+2. Verify token using `JWT_SECRET`.
+3. Fetch user details from the database.
+4. Attach `user` and `authToken` to `req` object.
 
-## **Services**
+**Error Handling:** Returns `401 Unauthorized` if the token is missing, invalid, or the user is not found.
 
-### **registerUser**
-- Registers a new user by hashing the password and storing the user data in the database.
-- Throws an error if the email already exists.
+## Services
 
-### **loginUser**
-- Authenticates a user by validating the email and password.
-- Generates a JWT token for the authenticated user.
+### User Registration Service
+- **Function:** `registerUser`
+- **Logic:**
+  1. Check if the user already exists.
+  2. Hash the password using `bcryptjs`.
+  3. Save the user in the database.
 
----
+### User Login Service
+- **Function:** `loginUser`
+- **Logic:**
+  1. Find the user by email.
+  2. Validate the password using `bcryptjs.compare`.
+  3. Generate and return a JWT token.
 
-## **Utilities**
+### JWT Service
+- **Function:** `generateToken`
+- **Description:** Generates a signed JWT token with a 1-hour expiration.
 
-### **JWT Service**
-- **generateToken(user)**: Creates a JWT token with user details.
-- **verifyToken(token)**: Verifies and decodes a JWT token.
+## Example Usage
 
----
+### User Registration:
+```bash
+curl -X POST http://localhost:3000/register \
+-H "Content-Type: application/json" \
+-d '{"name": "John Doe", "email": "johndoe@example.com", "password": "password123"}'
+```
 
-## **Error Handling**
-- Validation errors, such as missing fields or invalid inputs, return a `400 Bad Request` status with an error message.
-- Authentication errors, such as invalid or missing tokens, return a `401 Unauthorized` status with an error message.
+### User Login:
+```bash
+curl -X POST http://localhost:3000/login \
+-H "Content-Type: application/json" \
+-d '{"email": "johndoe@example.com", "password": "password123"}'
+```
 
----
+### Access Protected Route:
+```bash
+curl -X GET http://localhost:3000/protected \
+-H "Authorization: Bearer <JWT_TOKEN>"
+```
 
-## **Notes**
-- Ensure that `JWT_SECRET` is securely stored and not hardcoded in the application.
-- Use HTTPS in production to secure token transmission.
-- Use rate-limiting and monitoring for enhanced security.
+## Error Handling
+All endpoints return appropriate HTTP status codes and error messages. Ensure to handle these errors on the client side.
+
+## License
+This project is licensed under the MIT License. Feel free to use and modify it as needed.
 
 
-
-=============================================================================================================================
 # API Documentation for Seat Ticket Booking API
 
 This API enables users to book, retrieve, and reset seat bookings for a ticketing system. The following documentation outlines the API endpoints, their functionalities, and examples.
