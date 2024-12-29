@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { bookSeats } from "../hooks/seatBook"
 import { handleLogout } from "../hooks/handleLogout"
 import { handleReset } from "../hooks/handleReset"
-import { getSeats, seatBook } from "../features/seatBook/seatBookActions"
+import { seatBook } from "../features/seatBook/seatBookActions"
 import { toast, ToastContainer } from "react-toastify"
 import { fetchBookedSeats } from "../hooks/fetchBookedSeats"
 
@@ -19,9 +19,12 @@ const TicketBookingComponent = ({ currentUser }) => {
     Array.from({ length: totalSeats }, (_,index) => ({ status: "available", user: null,id : index+1 }))
   )
 
+  const [currentBookedSeat, setCurrentBookedSeat] = useState([]);
+
   const dispatch = useDispatch()
   const navigate = useNavigate()  
   const {loading, resetLoader} = useSelector((state) => state.seat);
+
  
   useEffect(()=>{
     fetchBookedSeats(setSeats, dispatch);
@@ -51,7 +54,6 @@ const TicketBookingComponent = ({ currentUser }) => {
 
     if (availableSeats.length < numSeats) {
       toast.error(`Not enough seats available.`, { position: "bottom-right" });
-
       return
     }
 
@@ -108,6 +110,7 @@ const TicketBookingComponent = ({ currentUser }) => {
       if (seatBook.fulfilled().type == resultAction.type) {
         toast.success("Seat Booked successfully!", { position: "bottom-right" });
         setSeats(updatedSeats);
+        setCurrentBookedSeat(selectedSeats);
         setBookCount("")
       } 
       else if(seatBook.rejected().type == resultAction.type) {
@@ -188,6 +191,19 @@ const TicketBookingComponent = ({ currentUser }) => {
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <h2 className="text-xl font-semibold mb-4">Book Seats</h2>
+              <div className="grid grid-cols-7 gap-2 mb-4">
+              {currentBookedSeat?.map((seat, idx) => {
+                return (
+                  <button
+                    key={idx}
+                    disabled
+                    className="h-10 rounded-lg text-sm font-medium transition-colors bg-yellow-400 text-white"
+                  >
+                    {seat.id+1}
+                  </button>
+                )
+              })}
+            </div>
               <div className="space-y-4">
                 <input
                   type="number"

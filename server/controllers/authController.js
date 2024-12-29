@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const { registerUser, loginUser } = require('../services/authService');
-const { verifyToken, generateToken } = require('../services/jwtService');
 
 exports.register = async (req, res) => {
     try {
