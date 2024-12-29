@@ -205,186 +205,127 @@ Defines the user schema with Sequelize.
 
 
 =============================================================================================================================
-# API Documentation for Ticket Booking
+# API Documentation for Seat Ticket Booking API
 
-## Overview
-This document provides details about the Ticket Booking API, which allows users to book seats, retrieve booked seats, and reset their bookings.
+This API enables users to book, retrieve, and reset seat bookings for a ticketing system. The following documentation outlines the API endpoints, their functionalities, and examples.
 
----
+## Prerequisites
+- Node.js and npm installed.
+- A configured Sequelize setup connected to your database.
+- Authentication middleware to protect the endpoints.
 
-## Endpoints
+## Models
 
-### 1. Book Seat
+### Seat
+| Field  | Type     | Description                 |
+|--------|----------|-----------------------------|
+| id     | Integer  | Primary key (auto-increment) |
+| number | Integer  | Unique seat number          |
 
-**Endpoint:** `/api/seat/seatBook`  
-**Method:** `POST`  
-**Middleware:** `authMiddleware`  
+### Booking
+| Field  | Type     | Description                 |
+|--------|----------|-----------------------------|
+| id     | Integer  | Primary key (auto-increment) |
+| userId | Integer  | ID of the user booking the seat |
+| seatId | Integer  | ID of the booked seat       |
+
+## API Endpoints
+
+### 1. Book Seats
+**Endpoint:** `POST /seatBook`
+
 **Description:** Allows a user to book one or more seats.
 
-**Request Headers:**
-- `Authorization`: Bearer token for authentication.
+**Headers:**
+- `Authorization: Bearer <token>`
 
 **Request Body:**
 ```json
 {
-    "bookedSeats": [1, 2, 3]  // Array of seat numbers to book
+  "bookedSeats": [1, 2, 3]
 }
 ```
 
-**Responses:**
-- **200 OK:** Seats successfully booked or updated.
-```json
-{
-    "message": "Seats 1, 2, 3 successfully booked for user ID 123.",
-    "seat": {
-        "id": 1,
-        "bookedSeats": [1, 2, 3],
-        "userId": 123
-    }
-}
-```
+**Response:**
+- **201 Created:** Seats booked successfully.
+  ```json
+  {
+    "message": "Seats booked successfully."
+  }
+  ```
 - **400 Bad Request:** Invalid input.
-```json
-{
+  ```json
+  {
     "message": "Invalid input: bookedSeats must be an array."
-}
-```
-- **500 Internal Server Error:**
-```json
-{
-    "message": "Internal Server Error",
-    "error": "Error details"
-}
-```
-
----
+  }
+  ```
+- **500 Internal Server Error:** Error during the booking process.
 
 ### 2. Get Booked Seats
+**Endpoint:** `GET /seatBook`
 
-**Endpoint:** `/api/seat/seatBook`  
-**Method:** `GET`  
-**Middleware:** `authMiddleware`  
-**Description:** Retrieves all booked seats for the authenticated user.
+**Description:** Retrieves all booked seats.
 
-**Request Headers:**
-- `Authorization`: Bearer token for authentication.
+**Headers:**
+- `Authorization: Bearer <token>`
 
-**Responses:**
-- **200 OK:** Successfully retrieved booked seats.
-```json
-{
-    "message": "Seats retrieved successfully for user ID 123.",
-    "seat": {
-        "id": 1,
-        "bookedSeats": [1, 2, 3],
-        "userId": 123
-    }
-}
-```
-- **404 Not Found:** No seats found for the user.
-```json
-{
-    "message": "No seats found for user ID 123."
-}
-```
-- **500 Internal Server Error:**
-```json
-{
-    "message": "Internal Server Error",
-    "error": "Error details"
-}
-```
+**Response:**
+- **200 OK:** List of booked seats.
+  ```json
+  {
+    "bookedSeats": [1, 2, 3]
+  }
+  ```
+- **500 Internal Server Error:** Error fetching booked seats.
 
----
+### 3. Reset Seats
+**Endpoint:** `POST /bookedSeatReset`
 
-### 3. Reset Booked Seats
+**Description:** Resets all seat bookings and clears the data.
 
-**Endpoint:** `/api/seat/bookedSeatReset`  
-**Method:** `POST`  
-**Middleware:** `authMiddleware`  
-**Description:** Resets all booked seats for the authenticated user.
+**Headers:**
+- `Authorization: Bearer <token>`
 
-**Request Headers:**
-- `Authorization`: Bearer token for authentication.
-
-**Responses:**
-- **200 OK:** Successfully reset booked seats.
-```json
-{
-    "message": "All bookings have been reset for user ID 123.",
-    "seat": {
-        "id": 1,
-        "bookedSeats": [],
-        "userId": 123
-    }
-}
-```
-- **404 Not Found:** No bookings found to reset.
-```json
-{
-    "message": "No bookings found for user ID 123."
-}
-```
-- **500 Internal Server Error:**
-```json
-{
-    "message": "Internal Server Error",
-    "error": "Error details"
-}
-```
-
----
-
-## Models
-
-### Seat Model
-Represents the `Seat` entity in the database.
-
-**Attributes:**
-- `id` (Integer): Primary key.
-- `bookedSeats` (Array of Integers): List of booked seat numbers.
-- `userId` (Integer): Unique identifier for the user.
-
----
-
-## Middleware
-
-### `authMiddleware`
-Ensures that the user is authenticated before accessing protected routes.
-
-**Functionality:**
-1. Verifies the presence and validity of the `Authorization` token in the request headers.
-2. Decodes the token to fetch user details.
-3. Attaches the authenticated user object to the `req` object.
-4. Returns a `401 Unauthorized` response if authentication fails.
-
----
-
-## Controllers
-
-### `bookSeat`
-Books one or more seats for the authenticated user. If the user has existing bookings, the new seats are merged with the existing ones.
-
-### `getSeats`
-Fetches the booked seats for the authenticated user. Returns a `404 Not Found` response if no bookings exist.
-
-### `resetSeats`
-Resets all booked seats for the authenticated user. Returns a `404 Not Found` response if no bookings exist.
-
----
+**Response:**
+- **200 OK:** All bookings and seats reset successfully.
+  ```json
+  {
+    "message": "All bookings and seats have been reset successfully."
+  }
+  ```
+- **500 Internal Server Error:** Error during the reset process.
 
 ## Database Setup
+Ensure the database tables are configured with Sequelize models:
+- `Seat` model for seat information.
+- `Booking` model for tracking seat bookings by users.
 
-### Seat Table
-**Schema:**
-- `id`: Auto-incrementing integer (Primary Key).
-- `bookedSeats`: Array of integers.
-- `userId`: Integer (Unique).
+## Middleware
+The `authMiddleware` is used to validate and authorize API requests. Ensure it is properly configured to handle user authentication.
 
----
+## Example Usage
+### Booking Seats:
+```bash
+curl -X POST http://localhost:3000/seatBook \
+-H "Authorization: Bearer <token>" \
+-H "Content-Type: application/json" \
+-d '{"bookedSeats": [1, 2, 3]}'
+```
 
-## Notes
-- Ensure the `authMiddleware` is properly configured with valid JWT handling.
-- The `bookedSeats` field is designed for PostgreSQL. For other databases, adjustments might be required.
+### Retrieving Booked Seats:
+```bash
+curl -X GET http://localhost:3000/seatBook \
+-H "Authorization: Bearer <token>"
+```
 
+### Resetting Bookings:
+```bash
+curl -X POST http://localhost:3000/bookedSeatReset \
+-H "Authorization: Bearer <token>"
+```
 
+## Error Handling
+All endpoints return appropriate HTTP status codes and error messages in case of failures. Ensure to handle these errors in your client-side application.
+
+## License
+This project is licensed under the MIT License. Feel free to use and modify it for your needs.
