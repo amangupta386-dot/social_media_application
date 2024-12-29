@@ -36,16 +36,23 @@ const Login = () => {
     const resultAction = dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
       toast.success('Login Successful!', {
-        position: 'top-center',
+        position: 'bottom-right',
         autoClose: 3000,
       });
     } else if (loginUser.rejected.match(resultAction)) {
       toast.error('Login Failed', {
-        position: 'top-center',
+        position: 'bottom-right',
         autoClose: 3000,
       });
     }
   };
+
+  if(error != null){
+    toast.error(error,{
+      position: 'bottom-center',
+      autoClose: 3000,
+    })
+  }
 
   return (
 
@@ -83,7 +90,6 @@ const Login = () => {
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
           <div className="mt-4">
             <p className="text-sm">
@@ -97,7 +103,7 @@ const Login = () => {
             </p>
           </div>
           <ToastContainer
-            position="top-center"
+            position="bottom-right"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop

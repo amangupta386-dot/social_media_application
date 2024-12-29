@@ -30,13 +30,13 @@ const Register = () => {
     const resultAction = await dispatch(registerUser({ name, email, password }));
     if (registerUser.fulfilled.match(resultAction)) {
       toast.success('User Register Successfully', {
-        position: 'top-center',
+        position: 'bottom-right',
         autoClose: 3000,
       });
       navigate(RouteName.login);    
     } else if (registerUser.rejected.match(resultAction)) {
       toast.error('Register Failed.', {
-        position: 'top-center',
+        position: 'bottom-right',
         autoClose: 3000,
       });
     }
@@ -97,7 +97,7 @@ const Register = () => {
           </p>
         </div>
         <ToastContainer
-            position="top-center"
+            position="bottom-right"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop

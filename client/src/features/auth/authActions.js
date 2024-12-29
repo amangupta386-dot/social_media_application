@@ -25,7 +25,6 @@ export const registerUser = createAsyncThunk(
         const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
         return response.data; 
       } catch (error) {
-        
         return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
       }
     }
