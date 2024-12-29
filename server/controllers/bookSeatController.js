@@ -2,12 +2,19 @@ const Seat = require('../models/seat');
 
 const bookSeat = async (req, res) => {
     try {
+        
         const userId = req.user.id;
 
         const { bookedSeats } = req.body;
 
+          
+          if (!Array.isArray(bookedSeats)) {
+            return res.status(400).json({ message: "Invalid input: bookedSeats must be an array." });
+        }
+
         const seats = await Seat.findOne({ where: { userId } });
 
+        
         if (!seats) {
             const newSeat = await Seat.create({
                 bookedSeats,

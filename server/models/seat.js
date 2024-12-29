@@ -9,8 +9,8 @@ const Seat = sequelize.define(
             autoIncrement: true,
             primaryKey: true,
         },
-        bookedSeat: {
-            type: DataTypes.INTEGER,
+        bookedSeats: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER), // For PostgreSQL
             allowNull: false,
         },
         userId: {

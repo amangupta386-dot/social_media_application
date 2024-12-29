@@ -8,13 +8,17 @@ import { RouteName } from "../utils/routesConstants"
 import { bookSeats } from "../hooks/seatBook"
 import { handleLogout } from "../hooks/handleLogout"
 import { handleReset } from "../hooks/handleReset"
+import { seatBook } from "../features/seatBook/seatBookActions"
+import { toast } from "react-toastify"
 
 const TicketBookingComponent = ({ currentUser }) => {
   const totalSeats = 80
   const seatsPerRow = 7
   const rows = Math.floor(totalSeats / seatsPerRow)
 
- 
+
+  
+
   const [seats, setSeats] = useState(
     Array.from({ length: totalSeats }, () => ({ status: "available", user: null }))
   )
@@ -23,14 +27,14 @@ const TicketBookingComponent = ({ currentUser }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
- 
+
 
   // Calculate available and booked seats
   const availableSeatsCount = seats.filter((seat) => seat.status === "available").length
   const bookedSeatsCount = totalSeats - availableSeatsCount
 
   // Booking logic
-  const handleBook = () => {
+  const handleBook = async() => {
     if (!currentUser) {
       alert("Please login to book seats.")
       return
@@ -80,9 +84,9 @@ const TicketBookingComponent = ({ currentUser }) => {
           availableSeatNumbers: rowSeats
         };
       }
-      const gettingData = bookSeats(Obj,numSeats)
-   
-      selectedSeats = gettingData.map(e=>e.availableSeatNumbers).flat()
+      const gettingData = bookSeats(Obj, numSeats)
+
+      selectedSeats = gettingData.map(e => e.availableSeatNumbers).flat()
     }
 
     // If not enough seats in a single row, book nearest seats
@@ -97,8 +101,25 @@ const TicketBookingComponent = ({ currentUser }) => {
         : seat
     )
 
-    setSeats(updatedSeats)
-    setBookCount("")
+    const updatedSeatsId = updatedSeats.map((item, idx)=>({
+      ...item,
+      id:idx+1
+    })).filter(item=>item.status=='booked').map(item=>item.id);
+
+    debugger
+    try {
+      const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
+      if (seatBook.fulfilled.match(resultAction)) {
+        toast.success("Seat Booked successfully!", { position: "top-right" });
+        setSeats(updatedSeats);
+        setBookCount("")
+      } else {
+        throw new Error(resultAction.payload || "Failed to Seat bookings.");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, { position: "top-right" });
+    }
+
   }
 
 
@@ -109,7 +130,7 @@ const TicketBookingComponent = ({ currentUser }) => {
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Ticket Booking</h1>
           <button
-            onClick={()=>{
+            onClick={() => {
               handleLogout(navigate, dispatch)
             }}
             className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
@@ -169,7 +190,6 @@ const TicketBookingComponent = ({ currentUser }) => {
                   className="w-full border rounded-lg px-3 py-2"
                   min="1"
                   max="7"
-                  onKeyDown={handleBook}
                 />
                 <button
                   onClick={handleBook}
@@ -178,8 +198,8 @@ const TicketBookingComponent = ({ currentUser }) => {
                   Book
                 </button>
                 <button
-                  onClick={()=>{
-                    handleReset(currentUser, seats, setSeats)
+                  onClick={() => {
+                    handleReset(currentUser, seats, setSeats, dispatch)
                   }}
                   className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                 >
