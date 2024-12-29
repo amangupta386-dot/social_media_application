@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../features/auth/authActions';
+import { loadUser, loginUser } from '../features/auth/authActions';
 import { RouteName } from '../utils/routesConstants';
 import { toast, ToastContainer } from 'react-toastify';
 import { validateEmail } from '../utils/validations';
@@ -41,6 +41,7 @@ const Login = () => {
     }
     
     await dispatch(loginUser({ email, password }));
+     dispatch(loadUser());
   };
 
  
