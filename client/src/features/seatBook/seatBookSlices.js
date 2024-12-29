@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { seatBook, bookedSeatReset } from './path-to-your-thunks'; // Adjust the import path
+import { seatBook, bookedSeatReset } from '../seatBook/seatBookActions'; // Adjust the import path
+import { getSeats } from './seatBookActions';
 
 const initialState = {
   bookedSeats: [],
   loading: false,
+  resetLoader:false,
   error: null,
   success: false,
 };
@@ -14,22 +16,22 @@ const seatSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    // Handle getSeats actions
-    .addCase(getSeats.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-      state.success = false;
-    })
-    .addCase(getSeats.fulfilled, (state, action) => {
-      state.loading = false;
-      state.success = true;
-      state.seats = action.payload; // Assuming API response contains seats data
-      
-    })
-    .addCase(getSeats.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-      state.success = false;
+      // Handle getSeats actions
+      .addCase(getSeats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getSeats.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.seats = action.payload; // Assuming API response contains seats data
+
+      })
+      .addCase(getSeats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
       })
 
       // Handle seatBook actions
@@ -48,19 +50,19 @@ const seatSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      
+
       // Handle bookedSeatReset actions
       .addCase(bookedSeatReset.pending, (state) => {
-        state.loading = true;
+        state.resetLoader = true;
         state.error = null;
       })
       .addCase(bookedSeatReset.fulfilled, (state) => {
-        state.loading = false;
+        state.resetLoader = false;
         state.success = true;
         state.bookedSeats = [];
       })
       .addCase(bookedSeatReset.rejected, (state, action) => {
-        state.loading = false;
+        state.resetLoader = false;
         state.error = action.payload;
       });
   },

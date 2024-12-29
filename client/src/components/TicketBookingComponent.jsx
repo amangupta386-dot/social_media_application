@@ -8,6 +8,7 @@ import { handleLogout } from "../hooks/handleLogout"
 import { handleReset } from "../hooks/handleReset"
 import { getSeats, seatBook } from "../features/seatBook/seatBookActions"
 import { toast } from "react-toastify"
+import { fetchBookedSeats } from "../hooks/fetchBookedSeats"
 
 const TicketBookingComponent = ({ currentUser }) => {
   const totalSeats = 80
@@ -18,42 +19,13 @@ const TicketBookingComponent = ({ currentUser }) => {
     Array.from({ length: totalSeats }, (_,index) => ({ status: "available", user: null,id : index+1 }))
   )
 
-  
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-
-  const fetchBookedSeats = async()=>{
-    try {
-      const resultAction = await dispatch(getSeats());
-      
-      if (getSeats.fulfilled.match(resultAction)) {
-        
-        toast.success("Seat Booked successfully!", { position: "top-right" });
-        setSeats((prevSeats) =>
-          prevSeats.map((item) => ({
-            ...item,
-            status: resultAction.payload.seat.bookedSeats.some((e) => e === item.id)
-              ? "booked"
-              : "available",
-          }))
-        );
-        
-        // setSeats(updatedSeats);
-        // setBookCount("")
-      } else {
-        throw new Error(resultAction.payload || "Failed to Seat bookings.");
-      }
-    } catch (error) {
-      toast.error(`Error: ${error.message}`, { position: "top-right" });
-    }
-  }
+  const navigate = useNavigate()  
+  const {loading, resetLoader} = useSelector((state) => state.seat);
+ 
   useEffect(()=>{
-    
-    fetchBookedSeats();
+    fetchBookedSeats(setSeats, dispatch);
   },[])
-
-
-
 
   // Calculate available and booked seats
   const availableSeatsCount = seats.filter((seat) => seat.status === "available").length
@@ -216,17 +188,20 @@ const TicketBookingComponent = ({ currentUser }) => {
                 />
                 <button
                   onClick={handleBook}
+                  disabled={loading}
                   className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                 >
-                  Book
+                {loading ? 'loading...' : 'Book'}
+
                 </button>
                 <button
                   onClick={() => {
                     handleReset(currentUser, seats, setSeats, dispatch)
                   }}
+                  disabled={resetLoader}
                   className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                 >
-                  Reset Booking
+                {resetLoader ? 'loading...' : 'Reset Booking'}
                 </button>
               </div>
             </div>
