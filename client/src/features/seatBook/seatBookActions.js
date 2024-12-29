@@ -15,7 +15,8 @@ export const getSeats = createAsyncThunk(
       });
       return response?.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
+      
+      return rejectWithValue(error?.response?.data?.message || 'Something went wrong');
     }
   }
 );
@@ -32,7 +33,8 @@ export const seatBook = createAsyncThunk(
         });
         return response?.data;
       } catch (error) {
-        return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
+        
+        return rejectWithValue(error?.response?.data?.message || 'Something went wrong');
       }
     }
   );
@@ -50,7 +52,7 @@ export const seatBook = createAsyncThunk(
         return response.data; 
       } catch (error) {
         
-        return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
+        return rejectWithValue(error?.response?.data?.message || 'Something went wrong');
       }
     }
   );

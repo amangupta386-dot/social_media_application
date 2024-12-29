@@ -26,18 +26,6 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        googleId: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        profilePic: {
-            type: DataTypes.STRING,
-            defaultValue: null,
-        },
-        fieldName: {
-            type: DataTypes.STRING,
-            defaultValue: () => Math.round(Math.random() * 1000).toString(),
-        },
     },
     {
         tableName: 'Users',  

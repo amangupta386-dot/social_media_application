@@ -94,7 +94,7 @@ const TicketBookingComponent = ({ currentUser }) => {
     if (selectedSeats.length < numSeats) {
       selectedSeats = availableSeats.slice(0, numSeats)
     }
-
+    
     // Update the seats state
     const updatedSeats = seats.map((seat, idx) =>
       selectedSeats.some((s) => s?.id === idx)
@@ -102,9 +102,7 @@ const TicketBookingComponent = ({ currentUser }) => {
         : seat
     )
 
-    const updatedSeatsId = updatedSeats.filter(item=>item.status=='booked').map(item=>item.id);
-
-    
+    const updatedSeatsId = updatedSeats.filter(item=>item.status=='booked' && item.user != null).map(item=>item.id);
   
       const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
       if (seatBook.fulfilled().type == resultAction.type) {
@@ -114,7 +112,7 @@ const TicketBookingComponent = ({ currentUser }) => {
         setBookCount("")
       } 
       else if(seatBook.rejected().type == resultAction.type) {
-        toast.error("Seated Booked Failed try again later", { position: "bottom-right" });
+        toast.error(resultAction.payload, { position: "bottom-right" });
       }
   
 

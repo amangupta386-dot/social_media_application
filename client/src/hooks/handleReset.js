@@ -17,7 +17,7 @@ export const handleReset = async(currentUser, seats, setSeats, dispatch) => {
       toast.success(`All bookings have been reset.`, { position: "bottom-right" });
 
     } else if(bookedSeatReset.rejected().type == resultAction.type) {
-      toast.error(`Failed to Reset Tickets Numbers`, { position: "bottom-right" });
+      toast.error(resultAction.payload, { position: "bottom-right" });
     }
   
 }
