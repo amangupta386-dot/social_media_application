@@ -8,7 +8,7 @@ export const handleReset = async(currentUser, seats, setSeats, dispatch) => {
     toast.error(`Please login to reset bookings.`, { position: "bottom-right" });
     return
   }
-  try {
+
    
     const resultAction =  await dispatch(bookedSeatReset());
     if (bookedSeatReset.fulfilled.match(resultAction)) {
@@ -16,10 +16,8 @@ export const handleReset = async(currentUser, seats, setSeats, dispatch) => {
       setSeats(updatedSeats); // Reset state only after API success
       toast.success(`All bookings have been reset.`, { position: "bottom-right" });
 
-    } else {
-      throw new Error(resultAction.payload || "Failed to reset bookings.");
+    } else if(bookedSeatReset.rejected().type == resultAction.type) {
+      toast.error(`Failed to Reset Tickets Numbers`, { position: "bottom-right" });
     }
-  } catch (error) {
-    toast.error(`Error: ${error.message}`, { position: "bottom-right" });
-  }
+  
 }

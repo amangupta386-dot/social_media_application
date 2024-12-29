@@ -21,6 +21,13 @@ const Login = () => {
   }, [isAuthenticated]);
 
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: 'top-right' });
+    }
+  }, [error]);
+  
+
   const handleLogin = async () => {
 
     if(!email || !password){
@@ -32,27 +39,11 @@ const Login = () => {
       toast.error("Please enter valid email", { position: "top-right" });
       return;
     }
-
-    const resultAction = dispatch(loginUser({ email, password }));
-    if (loginUser.fulfilled.match(resultAction)) {
-      toast.success('Login Successful!', {
-        position: 'bottom-right',
-        autoClose: 3000,
-      });
-    } else if (loginUser.rejected.match(resultAction)) {
-      toast.error('Login Failed', {
-        position: 'bottom-right',
-        autoClose: 3000,
-      });
-    }
+    
+    await dispatch(loginUser({ email, password }));
   };
 
-  if(error != null){
-    toast.error(error,{
-      position: 'bottom-center',
-      autoClose: 3000,
-    })
-  }
+ 
 
   return (
 

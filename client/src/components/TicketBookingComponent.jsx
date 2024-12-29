@@ -103,18 +103,17 @@ const TicketBookingComponent = ({ currentUser }) => {
     const updatedSeatsId = updatedSeats.filter(item=>item.status=='booked').map(item=>item.id);
 
     
-    try {
+  
       const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
-      if (seatBook.fulfilled.match(resultAction)) {
+      if (seatBook.fulfilled().type == resultAction.type) {
         toast.success("Seat Booked successfully!", { position: "bottom-right" });
         setSeats(updatedSeats);
         setBookCount("")
-      } else {
-        throw new Error(resultAction.payload || "Failed to Seat bookings.");
+      } 
+      else if(seatBook.rejected().type == resultAction.type) {
+        toast.error("Seated Booked Failed try again later", { position: "bottom-right" });
       }
-    } catch (error) {
-      toast.error(`Error: ${error.message}`, { position: "bottom-right" });
-    }
+  
 
   }
 

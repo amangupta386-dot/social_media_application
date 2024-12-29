@@ -2,9 +2,9 @@ import { toast } from "react-toastify";
 import { getSeats } from "../features/seatBook/seatBookActions";
 
 export const fetchBookedSeats = async(setSeats, dispatch)=>{
-    try {
+  
       const resultAction = await dispatch(getSeats());
-      if (getSeats.fulfilled.match(resultAction)) {        
+      if (getSeats.fulfilled().type == resultAction.type) {        
         setSeats((prevSeats) =>
           prevSeats.map((item) => ({
             ...item,
@@ -13,13 +13,9 @@ export const fetchBookedSeats = async(setSeats, dispatch)=>{
               : "available",
           }))
         );
-        
-        // setSeats(updatedSeats);
-        // setBookCount("")
-      } else {
-        throw new Error(resultAction.payload || "Failed to Seat bookings.");
+
+      } else if(getSeats.rejected().type == resultAction.type) {
+        toast.error(`Failed to Fetch Tickets Numbers`, { position: "bottom-right" });
       }
-    } catch (error) {
-      toast.error(`Error: ${error.message}`, { position: "top-right" });
-    }
+    
   }
