@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../features/auth/authActions';
-import SignInWithGoogle from '../components/SignInWithGoogle';
-import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 import { RouteName } from '../utils/routesConstants';
 import { toast, ToastContainer } from 'react-toastify';
-import { clearError, setError } from '../features/auth/authSlice';
 import { validateEmail } from '../utils/validations';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,18 +24,12 @@ const Login = () => {
   const handleLogin = async () => {
 
     if(!email || !password){
-      dispatch(setError('Please fill in all fields.'));
-      setTimeout(()=>{
-        dispatch(clearError());
-      }, 2000)
+      toast.error('Please fill in all fields.', { position: "top-right" });
       return;
     }
 
     if(!validateEmail(email)){
-      dispatch(setError('Please enter valid email'));
-      setTimeout(()=>{
-        dispatch(clearError());
-      }, 2000)
+      toast.error("Please enter valid email", { position: "top-right" });
       return;
     }
 
@@ -106,7 +97,7 @@ const Login = () => {
             </p>
           </div>
           <ToastContainer
-            position="top-left"
+            position="top-center"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop

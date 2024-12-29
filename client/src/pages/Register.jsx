@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../features/auth/authActions';
 import { useNavigate } from 'react-router-dom';
-import AuthenticationPageGrid from '../components/AuthenticationPageGrid';
 import { RouteName } from '../utils/routesConstants';
-import { clearError, setError } from '../features/auth/authSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { validateEmail } from '../utils/validations';
@@ -20,18 +18,12 @@ const Register = () => {
 
   const handleRegister = async () => {
     if(!email || !password || !name){
-      dispatch(setError('Please fill in all fields.'));
-      setTimeout(()=>{
-        dispatch(clearError());
-      }, 2000)
+      toast.error('Please fill in all fields.', { position: "top-right" });
       return;
     }
 
     if(!validateEmail(email)){
-      dispatch(setError('Please enter valid email'));
-      setTimeout(()=>{
-        dispatch(clearError());
-      }, 2000)
+      toast.error('Please enter valid email', { position: "top-right" });
       return;
     }
 
@@ -53,7 +45,6 @@ const Register = () => {
 
   return (
     <div className="relative h-screen bg-white overflow-hidden w-full">
-      <AuthenticationPageGrid/>
     <div
       className="absolute bottom-0 w-full bg-black rounded-t-[100px] p-8"
       style={{
@@ -94,7 +85,7 @@ const Register = () => {
           </button>
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <p className="text-sm">
             Already have an account?{' '}
             <span
@@ -106,7 +97,7 @@ const Register = () => {
           </p>
         </div>
         <ToastContainer
-            position="top-left"
+            position="top-center"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop

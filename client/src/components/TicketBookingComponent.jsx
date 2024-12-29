@@ -7,7 +7,7 @@ import { bookSeats } from "../hooks/seatBook"
 import { handleLogout } from "../hooks/handleLogout"
 import { handleReset } from "../hooks/handleReset"
 import { getSeats, seatBook } from "../features/seatBook/seatBookActions"
-import { toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import { fetchBookedSeats } from "../hooks/fetchBookedSeats"
 
 const TicketBookingComponent = ({ currentUser }) => {
@@ -34,13 +34,13 @@ const TicketBookingComponent = ({ currentUser }) => {
   // Booking logic
   const handleBook = async() => {
     if (!currentUser) {
-      alert("Please login to book seats.")
+      toast.error(`Please login to book seats.`, { position: "bottom-right" });
       return
     }
 
     const numSeats = parseInt(bookCount)
     if (isNaN(numSeats) || numSeats < 1 || numSeats > 7) {
-      alert("You can book between 1 and 7 seats at a time.")
+      toast.error(`You can book between 1 and 7 seats at a time`, { position: "bottom-right" });
       return
     }
 
@@ -50,7 +50,8 @@ const TicketBookingComponent = ({ currentUser }) => {
       .filter((seat) => seat.status === "available")
 
     if (availableSeats.length < numSeats) {
-      alert("Not enough seats available.")
+      toast.error(`Not enough seats available.`, { position: "bottom-right" });
+
       return
     }
 
@@ -105,14 +106,14 @@ const TicketBookingComponent = ({ currentUser }) => {
     try {
       const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
       if (seatBook.fulfilled.match(resultAction)) {
-        toast.success("Seat Booked successfully!", { position: "top-right" });
+        toast.success("Seat Booked successfully!", { position: "bottom-right" });
         setSeats(updatedSeats);
         setBookCount("")
       } else {
         throw new Error(resultAction.payload || "Failed to Seat bookings.");
       }
     } catch (error) {
-      toast.error(`Error: ${error.message}`, { position: "top-right" });
+      toast.error(`Error: ${error.message}`, { position: "bottom-right" });
     }
 
   }
@@ -121,6 +122,18 @@ const TicketBookingComponent = ({ currentUser }) => {
 
   return (
     <div className="bg-gray-50 p-8">
+       <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Ticket Booking</h1>

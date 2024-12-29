@@ -4,10 +4,7 @@ import { getSeats } from "../features/seatBook/seatBookActions";
 export const fetchBookedSeats = async(setSeats, dispatch)=>{
     try {
       const resultAction = await dispatch(getSeats());
-      
-      if (getSeats.fulfilled.match(resultAction)) {
-        
-        toast.success("Seat Booked successfully!", { position: "top-right" });
+      if (getSeats.fulfilled.match(resultAction)) {        
         setSeats((prevSeats) =>
           prevSeats.map((item) => ({
             ...item,
