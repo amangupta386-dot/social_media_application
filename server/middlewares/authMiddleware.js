@@ -15,7 +15,6 @@ const authMiddleware = async (req, res, next) => {
 
         console.log('Decoded Token:', decoded);
 
-        // Fetch user data from the database
         const user = await User.findOne({ where: { email: decoded.email } });
 
         if (!user) {

@@ -9,7 +9,7 @@ const registerUser = async (userData) => {
     let existingUser;
 
     try {
-        // Check if user already exists
+ 
         existingUser = await User.findOne({ where: { email } });
     } catch (e) {
         console.log(e);
@@ -19,10 +19,10 @@ const registerUser = async (userData) => {
         throw new Error('User already exists');
     }
 
-    // Hash the password before saving the user
+  
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the new user with the hashed password
+    
     await User.create({ name, email, password: hashedPassword });
 };
 

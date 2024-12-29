@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 function Dashboard() {
 
   const { user } = useSelector((state) => state.auth);
-  console.log(user.user.name, "user");
 
 
   return (

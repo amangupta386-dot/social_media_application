@@ -1,18 +1,14 @@
-const Seat = require('../models/seat'); // Import the Seat model
+const Seat = require('../models/seat'); 
 
 const bookSeat = async (req, res) => {
     try {
-        // Extract the userId from the authenticated request
         const userId = req.user.id;
 
-        // Extract the bookedSeats from the request body
-        const { bookedSeats } = req.body; // Expecting an array of seat numbers
+        const { bookedSeats } = req.body;
 
-        // Check if there is an existing booking for the user
         const seats = await Seat.findOne({ where: { userId } });
 
         if (!seats) {
-            // Create a new booking for the user if no previous booking exists
             const newSeat = await Seat.create({
                 bookedSeats,
                 userId,
@@ -41,10 +37,8 @@ const bookSeat = async (req, res) => {
 
 const resetSeats = async (req, res) => {
     try {
-        // Extract the userId from the authenticated request
         const userId = req.user.id;
 
-        // Reset the seat bookings for the specific user by setting bookedSeats to an empty array
         const seats = await Seat.findOne({ where: { userId } });
 
         if (!seats) {

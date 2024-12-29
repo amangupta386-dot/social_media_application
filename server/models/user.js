@@ -40,7 +40,7 @@ const User = sequelize.define(
         },
     },
     {
-        tableName: 'Users', // Explicitly define the table name
+        tableName: 'Users',  
     }
 );
 

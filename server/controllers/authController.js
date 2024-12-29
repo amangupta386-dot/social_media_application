@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const token = await loginUser(email, password);
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({ message: 'Login successful', token, });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -23,11 +23,10 @@ exports.login = async (req, res) => {
 
 exports.protected = (req, res) => {
     try {
-        // req.user and req.authToken are populated by the middleware
         res.status(200).json({
             message: 'Protected route accessed',
-            user: req.user, // Full user data from the middleware
-            token: req.authToken, // Auth token from the middleware
+            user: req.user,
+            token: req.authToken,
         });
     } catch (err) {
         res.status(401).json({ error: 'Unauthorized' });
