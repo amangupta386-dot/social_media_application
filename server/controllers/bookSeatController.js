@@ -1,5 +1,30 @@
 const Seat = require('../models/seat'); 
 
+const getSeats = async (req, res) => {
+    try {
+        // Get the user ID from the request object
+        const userId = req.user.id;
+
+        // Fetch the seats data for the given user ID
+        const seats = await Seat.findOne({ where: { userId } });
+
+        // If no seats are found, return a 404 response
+        if (!seats) {
+            return res.status(404).json({ message: `No seats found for user ID ${userId}.` });
+        }
+
+        // Return the seat data
+        return res.status(200).json({
+            message: `Seats retrieved successfully for user ID ${userId}.`,
+            seat: seats,
+        });
+    } catch (error) {
+        console.error('Error fetching seats:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+};
+
+
 const bookSeat = async (req, res) => {
     try {
         
@@ -65,5 +90,5 @@ const resetSeats = async (req, res) => {
     }
 };
 
-module.exports = { bookSeat, resetSeats };
+module.exports = { getSeats, bookSeat, resetSeats };
 

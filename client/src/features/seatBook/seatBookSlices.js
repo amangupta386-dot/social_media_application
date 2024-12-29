@@ -14,6 +14,24 @@ const seatSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    // Handle getSeats actions
+    .addCase(getSeats.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    })
+    .addCase(getSeats.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.seats = action.payload; // Assuming API response contains seats data
+      
+    })
+    .addCase(getSeats.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.success = false;
+      })
+
       // Handle seatBook actions
       .addCase(seatBook.pending, (state) => {
         state.loading = true;

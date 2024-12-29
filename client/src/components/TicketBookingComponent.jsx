@@ -1,31 +1,57 @@
 'use client'
 
-import React, { useState } from "react"
-import { useDispatch } from "react-redux"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { logout } from "../features/auth/authSlice"
-import { RouteName } from "../utils/routesConstants"
 import { bookSeats } from "../hooks/seatBook"
 import { handleLogout } from "../hooks/handleLogout"
 import { handleReset } from "../hooks/handleReset"
-import { seatBook } from "../features/seatBook/seatBookActions"
+import { getSeats, seatBook } from "../features/seatBook/seatBookActions"
 import { toast } from "react-toastify"
 
 const TicketBookingComponent = ({ currentUser }) => {
   const totalSeats = 80
   const seatsPerRow = 7
   const rows = Math.floor(totalSeats / seatsPerRow)
-
-
-  
-
+  const [bookCount, setBookCount] = useState("")
   const [seats, setSeats] = useState(
-    Array.from({ length: totalSeats }, () => ({ status: "available", user: null }))
+    Array.from({ length: totalSeats }, (_,index) => ({ status: "available", user: null,id : index+1 }))
   )
 
-  const [bookCount, setBookCount] = useState("")
+  
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const fetchBookedSeats = async()=>{
+    try {
+      const resultAction = await dispatch(getSeats());
+      
+      if (getSeats.fulfilled.match(resultAction)) {
+        
+        toast.success("Seat Booked successfully!", { position: "top-right" });
+        setSeats((prevSeats) =>
+          prevSeats.map((item) => ({
+            ...item,
+            status: resultAction.payload.seat.bookedSeats.some((e) => e === item.id)
+              ? "booked"
+              : "available",
+          }))
+        );
+        
+        // setSeats(updatedSeats);
+        // setBookCount("")
+      } else {
+        throw new Error(resultAction.payload || "Failed to Seat bookings.");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, { position: "top-right" });
+    }
+  }
+  useEffect(()=>{
+    
+    fetchBookedSeats();
+  },[])
+
 
 
 
@@ -97,16 +123,13 @@ const TicketBookingComponent = ({ currentUser }) => {
     // Update the seats state
     const updatedSeats = seats.map((seat, idx) =>
       selectedSeats.some((s) => s?.id === idx)
-        ? { status: "booked", user: currentUser }
+        ? { status: "booked", user: currentUser, id: seat.id }
         : seat
     )
 
-    const updatedSeatsId = updatedSeats.map((item, idx)=>({
-      ...item,
-      id:idx+1
-    })).filter(item=>item.status=='booked').map(item=>item.id);
+    const updatedSeatsId = updatedSeats.filter(item=>item.status=='booked').map(item=>item.id);
 
-    debugger
+    
     try {
       const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
       if (seatBook.fulfilled.match(resultAction)) {

@@ -3,6 +3,23 @@ import axios from "axios";
 import { API_ENDPOINTS } from "../../utils/apiEndPoints";
 
 
+export const getSeats = createAsyncThunk(
+  'seat/getSeats',
+  async (_, { rejectWithValue }) => {
+   
+    const token = localStorage.getItem('token');
+  if (!token) return rejectWithValue('No token found');
+    try { 
+      const response = await axios.get(API_ENDPOINTS.SEAT_BOOK, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.error || 'Something went wrong');
+    }
+  }
+);
+
 export const seatBook = createAsyncThunk(
     'seat/bookedSeats',
     async ({ bookedSeats }, { rejectWithValue }) => {

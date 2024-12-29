@@ -12,9 +12,6 @@ const authMiddleware = async (req, res, next) => {
 
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        console.log('Decoded Token:', decoded);
-
         const user = await User.findOne({ where: { email: decoded.email } });
 
         if (!user) {
