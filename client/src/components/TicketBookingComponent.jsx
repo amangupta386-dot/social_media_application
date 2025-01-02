@@ -101,8 +101,8 @@ const TicketBookingComponent = ({ currentUser }) => {
         ? { status: "booked", user: currentUser, id: seat.id }
         : seat
     )
-
-    const updatedSeatsId = updatedSeats.filter(item=>item.status=='booked' && item.user != null).map(item=>item.id);
+    debugger
+    const updatedSeatsId = selectedSeats.map(e=>e.id);
   
       const resultAction = await dispatch(seatBook({ bookedSeats: updatedSeatsId }));
       if (seatBook.fulfilled().type == resultAction.type) {
